@@ -5,9 +5,6 @@ import streamlit as st
 import tabula  # PDF table extra package
 import plotly.express as px
 
-import h2o
-h2o.init()
-
 # setup streamlit page title, side bar and file uploader
 st.title("Bank Statement Visualization")
 st.subheader("Please upload bank statement pdf file through the sidebar")
