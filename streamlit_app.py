@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import streamlit as st
 import tabula  # PDF table extra package
-import plotly_express as px
+import plotly.express as px
 
 # setup streamlit page title, side bar and file uploader
 st.title("Bank Statement Visualization")
