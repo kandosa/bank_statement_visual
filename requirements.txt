@@ -2,3 +2,4 @@ streamlit
 pandas
 tabula-py
 plotly.express
+h2o
