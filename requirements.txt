@@ -3,4 +3,3 @@ pandas
 tabula-py
 plotly
 altair
-h2o
