@@ -12,11 +12,6 @@ st.write("")
 st.sidebar.subheader("Visualization Settings")
 upload_file = st.sidebar.file_uploader(label="Drop Bank Statement PDF file", type=['pdf'])
 
-chart_select = st.sidebar.selectbox(
-    label="Select Pie Plot or statistic Table",
-    options=['Pie Plot', 'Statistic Table', "Download as CSV"]
-)
-
 global df_final
 
 if upload_file is not None:
@@ -57,6 +52,11 @@ try:
 except Exception as e:
     print('The Error is', e)
 
+chart_select = st.sidebar.selectbox(
+    label="Select Pie Plot or statistic Table",
+    options=['Pie Plot', 'Statistic Table', "Download as CSV"]
+)    
+    
 if chart_select == 'Pie Plot':
     try:
         plot = px.pie(df_final, values="AMOUNT", names="MERCHANT CATEGORY", width=800, height= 800)
