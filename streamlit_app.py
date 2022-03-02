@@ -11,13 +11,17 @@ st.subheader("Please upload bank statement pdf file through the sidebar")
 st.write("")
 st.sidebar.subheader("Visualization Settings")
 upload_file = st.sidebar.file_uploader(label="Drop Bank Statement PDF file", type=['pdf'])
+chart_select = st.sidebar.selectbox(
+    label="Select Pie Plot or statistic Table",
+    options=['Pie Plot', 'Statistic Table', "Download as CSV"]
+)
 
 @st.cache
 def load_pdf():
-    df_list = tabula.read_pdf(upload_file, stream=True, pages=[3,4], guess=False)
+    df_list = tabula.read_pdf(upload_file, stream=True, pages=[3, 4], guess=False)
     df = pd.DataFrame(df_list[0])
     df.rename(columns={'Unnamed: 0': 'PURCHASES', 'ONLINE PHONE': 'MERCHANT CATEGORY', 'Unnamed: 1': 'AMOUNT'}
-             , inplace=True)
+              , inplace=True)
     df = df[['PURCHASES', 'MERCHANT CATEGORY', 'AMOUNT']]
     df = df.dropna()
     df = df.iloc[1:, :]
@@ -27,7 +31,7 @@ def load_pdf():
 
     df_1 = pd.DataFrame(df_list[1])
     df_1.rename(columns={'DISCOVER IT® CARD ENDING IN 1994': 'PURCHASES', 'Unnamed: 0': 'MERCHANT CATEGORY',
-                                 'Unnamed: 1': 'AMOUNT'}, inplace=True)
+                         'Unnamed: 1': 'AMOUNT'}, inplace=True)
     df_1 = df_1[['PURCHASES', 'MERCHANT CATEGORY', 'AMOUNT']]
     df_1 = df_1.dropna()
     df_1 = df_1.loc[(df_1['PURCHASES'].str.contains('/'))]
@@ -36,12 +40,13 @@ def load_pdf():
     df_1['PURCHASES'] = df_1['PURCHASES'].str[5:]
 
     df_final = pd.concat([df, df_1])
-    df_final = df_final.reset_index(drop= True)
+    df_final = df_final.reset_index(drop=True)
     df_final = df_final[['DATE', 'PURCHASES', 'MERCHANT CATEGORY', 'AMOUNT']]
     df_final.AMOUNT = df_final.AMOUNT.apply(lambda x: float(x[1:]))
     return df_final
 
-dff = load_pdf() 
+dff = load_pdf()
+
 try:
     st.write(dff)
     st.text("")
@@ -49,15 +54,10 @@ try:
 except Exception as e:
     print('The Error is', e)
 
-chart_select = st.sidebar.selectbox(
-    label="Select Pie Plot or statistic Table",
-    options=['Pie Plot', 'Statistic Table', "Download as CSV"]
-)    
-    
 if chart_select == 'Pie Plot':
     try:
-        plot = px.pie(dff, values="AMOUNT", names="MERCHANT CATEGORY", width=800, height= 800)
-        plot.update_traces(textposition="inside", textinfo= 'percent+label')
+        plot = px.pie(dff, values="AMOUNT", names="MERCHANT CATEGORY", width=800, height=800)
+        plot.update_traces(textposition="inside", textinfo='percent+label')
         st.plotly_chart(plot)
         st.subheader("Table of total cost in each category")
         stat_t = dff.groupby(by='MERCHANT CATEGORY')['AMOUNT'].sum()
@@ -78,7 +78,9 @@ elif chart_select == 'Download as CSV':
     try:
         @st.cache
         def convert_df(df):
-            return df.to_csv(index= False).encode('utf-8')
+            return df.to_csv(index=False).encode('utf-8')
+
+
         csv = convert_df(dff)
         st.download_button(
             "Press to Download",
