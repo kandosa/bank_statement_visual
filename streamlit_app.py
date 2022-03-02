@@ -45,7 +45,7 @@ def load_pdf():
             return df_final
         except Exception as e:
             print('The Error is', e)
-dff = load_df() 
+dff = load_pdf() 
 try:
     st.write(dff)
     st.text("")
