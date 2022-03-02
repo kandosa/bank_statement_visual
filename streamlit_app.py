@@ -13,6 +13,7 @@ st.sidebar.subheader("Visualization Settings")
 upload_file = st.sidebar.file_uploader(label="Drop Bank Statement PDF file", type=['pdf'])
 
 @st.cache
+
 global df_final
 
 if upload_file is not None:
